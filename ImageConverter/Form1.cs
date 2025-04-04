@@ -5,23 +5,12 @@ namespace ImageConverter;
 
 public partial class Form1 : Form
 {
-    // Przechowujemy oryginalny obraz
-    private Image? originalImage;
-
-    // Przechowujemy oryginalne proporcje (width/height) lub height/width
-    private float originalAspectRatio = 1.0f;
-
-    // Flaga do blokowania eventów, gdy zmieniamy wartoœci programowo
-    private bool isChangingValues = false;
+    // Lista przechowuj¹ca œcie¿ki wybranych obrazów.
+    private List<string> imagePaths = new List<string>();
 
     public Form1()
     {
         InitializeComponent();
-    }
-
-    private void comboBoxFormat_SelectedIndexChanged(object sender, EventArgs e)
-    {
-
     }
 
     private void Form1_Load(object sender, EventArgs e)
@@ -33,78 +22,30 @@ public partial class Form1 : Form
         comboBoxFormat.Items.Add("BMP");
         comboBoxFormat.SelectedIndex = 0; // domyœlnie JPG
 
+        // Ustawiamy domyœlne wartoœci maksymalnych wymiarów i jakoœci
         numericWidth.Value = 1920;
         numericHeight.Value = 1080;
         numericQuality.Value = 80;
-
-        // (Opcjonalnie) pocz¹tkowo odznaczony
-        chkMaintainAspectRatio.Checked = false;
     }
 
     private void btnInsert_Click(object sender, EventArgs e)
     {
         using (OpenFileDialog openFileDialog = new OpenFileDialog())
         {
-            openFileDialog.Filter = "Pliki graficzne|*.jpg;*.jpeg;*.png;*.bmp|Wszystkie pliki|*.*";
+            openFileDialog.Filter = "Pliki graficzne|*.jpg;*.jpeg;*.png;*.bmp;*.webp|Wszystkie pliki|*.*";
+            openFileDialog.Multiselect = true;
+
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                // Jeœli mieliœmy wczeœniej obraz, zwalniamy zasoby
-                if (originalImage != null)
+                imagePaths.Clear();
+                listBoxFiles.Items.Clear();
+
+                foreach (string file in openFileDialog.FileNames)
                 {
-                    originalImage.Dispose();
-                    originalImage = null;
+                    imagePaths.Add(file);
+                    listBoxFiles.Items.Add(Path.GetFileName(file));
                 }
-
-                // Wczytujemy nowy obraz z pliku
-                originalImage = Image.FromFile(openFileDialog.FileName);
-
-                // Ustawiamy oryginalny aspect ratio
-                originalAspectRatio = (float)originalImage.Width / (float)originalImage.Height;
-
-                //(Opcjonalnie)wyœwietlamy podgl¹d w PictureBox
-                if (pictureBoxPreview != null)
-                {
-                    pictureBoxPreview.Image = new Bitmap(originalImage);
-                }
-
-                // Ustawiamy domyœlnie szerokoœæ i wysokoœæ w NumericUpDown
-                isChangingValues = true; // Blokujemy eventy
-                numericWidth.Value = originalImage.Width;
-                numericHeight.Value = originalImage.Height;
-                isChangingValues = false;
             }
-        }
-    }
-
-    private void numericWidth_ValueChanged(object sender, EventArgs e)
-    {
-        // Je¿eli zmieniamy wartoœci z kodu (isChangingValues = true), to nic nie rób
-        if (isChangingValues) return;
-
-        // Jeœli checkBox nie jest zaznaczony, to te¿ nic nie robimy
-        if (!chkMaintainAspectRatio.Checked) return;
-
-        // Je¿eli mamy wczytany obraz i chcemy zachowaæ proporcje:
-        if (originalImage != null)
-        {
-            isChangingValues = true; // blokujemy kolejne eventy
-                                     // Obliczamy wysokoœæ na podstawie nowej szerokoœci i oryginalnych proporcji
-            numericHeight.Value = (decimal)((float)numericWidth.Value / originalAspectRatio);
-            isChangingValues = false;
-        }
-    }
-
-    private void numericHeight_ValueChanged(object sender, EventArgs e)
-    {
-        if (isChangingValues) return;
-        if (!chkMaintainAspectRatio.Checked) return;
-
-        if (originalImage != null)
-        {
-            isChangingValues = true;
-            // Obliczamy szerokoœæ na podstawie nowej wysokoœci
-            numericWidth.Value = (decimal)((float)numericHeight.Value * originalAspectRatio);
-            isChangingValues = false;
         }
     }
 
@@ -113,7 +54,6 @@ public partial class Form1 : Form
         var destRect = new Rectangle(0, 0, width, height);
         var destImage = new Bitmap(width, height);
 
-        // Ustawiamy DPI takie samo jak w oryginale
         destImage.SetResolution(img.HorizontalResolution, img.VerticalResolution);
 
         using (var graphics = Graphics.FromImage(destImage))
@@ -124,7 +64,7 @@ public partial class Form1 : Form
             graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
 
-            using (var wrapMode = new System.Drawing.Imaging.ImageAttributes())
+            using (var wrapMode = new ImageAttributes())
             {
                 wrapMode.SetWrapMode(System.Drawing.Drawing2D.WrapMode.TileFlipXY);
                 graphics.DrawImage(img, destRect, 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, wrapMode);
@@ -132,6 +72,16 @@ public partial class Form1 : Form
         }
 
         return destImage;
+    }
+
+    private Image ResizeImageProportionally(Image original, int maxWidth, int maxHeight)
+    {
+        // Obliczamy skalê, aby obraz zmieœci³ siê w zadanych wymiarach
+        double scale = Math.Min((double)maxWidth / original.Width, (double)maxHeight / original.Height);
+        int newWidth = (int)(original.Width * scale);
+        int newHeight = (int)(original.Height * scale);
+
+        return ResizeImage(original, newWidth, newHeight);
     }
 
     private ImageFormat GetImageFormatFromCombo(string formatName)
@@ -146,26 +96,21 @@ public partial class Form1 : Form
             case "BMP":
                 return ImageFormat.Bmp;
             default:
-                return ImageFormat.Jpeg; // domyœlnie JPG
+                return ImageFormat.Jpeg;
         }
     }
 
     private void SaveWebPWithQuality(Image image, string path, long quality)
     {
-        // Konwertujemy System.Drawing.Image do MemoryStream.
         using (var ms = new MemoryStream())
         {
-            // Zapisujemy tymczasowo obraz w formacie PNG, aby nie traciæ przez stratn¹ konwersjê
+            // Zapisujemy obraz tymczasowo jako PNG, aby zachowaæ wysok¹ jakoœæ przy konwersji
             image.Save(ms, ImageFormat.Png);
             ms.Position = 0;
 
-            // £adujemy obraz do MagickImage
             using (var magickImage = new MagickImage(ms))
             {
-                // Ustawiamy jakoœæ kompresji WebP (w skali 0-100)
                 magickImage.Quality = (uint)quality;
-
-                // Zapisujemy obraz w formacie WebP
                 magickImage.Write(path, MagickFormat.WebP);
             }
         }
@@ -173,19 +118,12 @@ public partial class Form1 : Form
 
     private void SaveJpegWithQuality(Image image, string path, long quality)
     {
-        // Szukamy kodeka JPG
         ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
-
-        // Ustawiamy parametry encodera (jakoœæ)
         EncoderParameters encoderParams = new EncoderParameters(1);
-        EncoderParameter encoderParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality);
-        encoderParams.Param[0] = encoderParam;
-
-        // Zapis do pliku
+        encoderParams.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality);
         image.Save(path, jpgEncoder, encoderParams);
     }
 
-    // Metoda pomocnicza do znalezienia kodeka
     private ImageCodecInfo GetEncoder(ImageFormat format)
     {
         ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
@@ -201,72 +139,74 @@ public partial class Form1 : Form
 
     private void btnConvert_Click(object sender, EventArgs e)
     {
-        // SprawdŸ, czy zosta³ wczytany obraz
-        if (originalImage == null)
+        if (imagePaths.Count == 0)
         {
-            MessageBox.Show("Najpierw wstaw obraz!", "B³¹d", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Najpierw wybierz obrazy do konwersji!", "B³¹d", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
-        // Pobierz parametry z kontrolek
-        int newWidth = (int)numericWidth.Value;
-        int newHeight = (int)numericHeight.Value;
+        // Pobieramy maksymalne wymiary z istniej¹cych kontrolek
+        int maxWidth = (int)numericWidth.Value;
+        int maxHeight = (int)numericHeight.Value;
         long quality = (long)numericQuality.Value;
-        string selectedFormat = comboBoxFormat.SelectedItem.ToString();
+        string selectedFormat = comboBoxFormat.SelectedItem.ToString().ToUpper();
 
-        // Skalujemy obraz do nowych rozmiarów
-        using (Image resizedImage = ResizeImage(originalImage, newWidth, newHeight))
+        using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
         {
-            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            folderDialog.Description = "Wybierz folder, do którego maj¹ zostaæ zapisane przekonwertowane obrazy";
+            if (folderDialog.ShowDialog() == DialogResult.OK)
             {
-                // Ustawiamy domyœln¹ nazwê pliku
-                saveFileDialog.FileName = "converted";
+                string outputFolder = folderDialog.SelectedPath;
+                int successCount = 0;
+                int failCount = 0;
 
-                // Ustawiamy filtr dialogu w zale¿noœci od wybranego formatu
-                switch (selectedFormat.ToUpper())
+                foreach (string filePath in imagePaths)
                 {
-                    case "JPG":
-                    case "JPEG":
-                        saveFileDialog.Filter = "Obraz JPG|*.jpg";
-                        break;
-                    case "PNG":
-                        saveFileDialog.Filter = "Obraz PNG|*.png";
-                        break;
-                    case "BMP":
-                        saveFileDialog.Filter = "Obraz BMP|*.bmp";
-                        break;
-                    case "WEBP":
-                        saveFileDialog.Filter = "Obraz WebP|*.webp";
-                        break;
-                    default:
-                        saveFileDialog.Filter = "Obraz JPG|*.jpg";
-                        break;
-                }
-
-                // Jeœli u¿ytkownik wybra³ miejsce zapisu
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    // W zale¿noœci od formatu wykonujemy odpowiedni zapis
-                    switch (selectedFormat.ToUpper())
+                    try
                     {
-                        case "JPG":
-                        case "JPEG":
-                            SaveJpegWithQuality(resizedImage, saveFileDialog.FileName, quality);
-                            break;
-                        case "PNG":
-                            resizedImage.Save(saveFileDialog.FileName, ImageFormat.Png);
-                            break;
-                        case "BMP":
-                            resizedImage.Save(saveFileDialog.FileName, ImageFormat.Bmp);
-                            break;
-                        case "WEBP":
-                            // Zapis do WebP z wykorzystaniem Magick.NET
-                            SaveWebPWithQuality(resizedImage, saveFileDialog.FileName, quality);
-                            break;
-                    }
+                        using (Image original = Image.FromFile(filePath))
+                        {
+                            using (Image resizedImage = ResizeImageProportionally(original, maxWidth, maxHeight))
+                            {
+                                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
+                                string newFileName = $"{fileNameWithoutExt}_converted";
 
-                    MessageBox.Show("Obraz zosta³ zapisany!", "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                switch (selectedFormat)
+                                {
+                                    case "JPG":
+                                    case "JPEG":
+                                        newFileName += ".jpg";
+                                        SaveJpegWithQuality(resizedImage, Path.Combine(outputFolder, newFileName), quality);
+                                        break;
+                                    case "PNG":
+                                        newFileName += ".png";
+                                        resizedImage.Save(Path.Combine(outputFolder, newFileName), ImageFormat.Png);
+                                        break;
+                                    case "BMP":
+                                        newFileName += ".bmp";
+                                        resizedImage.Save(Path.Combine(outputFolder, newFileName), ImageFormat.Bmp);
+                                        break;
+                                    case "WEBP":
+                                        newFileName += ".webp";
+                                        SaveWebPWithQuality(resizedImage, Path.Combine(outputFolder, newFileName), quality);
+                                        break;
+                                    default:
+                                        newFileName += ".jpg";
+                                        SaveJpegWithQuality(resizedImage, Path.Combine(outputFolder, newFileName), quality);
+                                        break;
+                                }
+                            }
+                        }
+                        successCount++;
+                    }
+                    catch
+                    {
+                        failCount++;
+                    }
                 }
+
+                MessageBox.Show($"Konwersja zakoñczona.\nPomyœlnie przekonwertowano: {successCount} plików.\nNie uda³o siê przekonwertowaæ: {failCount} plików.",
+                    "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }

@@ -38,8 +38,8 @@
             numericHeight = new NumericUpDown();
             numericQuality = new NumericUpDown();
             comboBoxFormat = new ComboBox();
-            chkMaintainAspectRatio = new CheckBox();
             pictureBoxPreview = new PictureBox();
+            listBoxFiles = new ListBox();
             ((System.ComponentModel.ISupportInitialize)numericWidth).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericHeight).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericQuality).BeginInit();
@@ -78,25 +78,25 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(294, 301);
+            label2.Location = new Point(259, 301);
             label2.Name = "label2";
-            label2.Size = new Size(59, 15);
+            label2.Size = new Size(129, 15);
             label2.TabIndex = 3;
-            label2.Text = "Szerokość";
+            label2.Text = "Maksymalna Szerokość";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(434, 301);
+            label3.Location = new Point(415, 301);
             label3.Name = "label3";
-            label3.Size = new Size(60, 15);
+            label3.Size = new Size(130, 15);
             label3.TabIndex = 4;
-            label3.Text = "Wysokość";
+            label3.Text = "Maksymalna Wysokość";
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(600, 301);
+            label4.Location = new Point(655, 301);
             label4.Name = "label4";
             label4.Size = new Size(41, 15);
             label4.TabIndex = 5;
@@ -111,22 +111,20 @@
             numericWidth.Size = new Size(113, 23);
             numericWidth.TabIndex = 6;
             numericWidth.Value = new decimal(new int[] { 1920, 0, 0, 0 });
-            numericWidth.ValueChanged += numericWidth_ValueChanged;
             // 
             // numericHeight
             // 
-            numericHeight.Location = new Point(385, 319);
+            numericHeight.Location = new Point(415, 319);
             numericHeight.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             numericHeight.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericHeight.Name = "numericHeight";
             numericHeight.Size = new Size(113, 23);
             numericHeight.TabIndex = 7;
             numericHeight.Value = new decimal(new int[] { 1080, 0, 0, 0 });
-            numericHeight.ValueChanged += numericHeight_ValueChanged;
             // 
             // numericQuality
             // 
-            numericQuality.Location = new Point(544, 319);
+            numericQuality.Location = new Point(599, 319);
             numericQuality.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericQuality.Name = "numericQuality";
             numericQuality.Size = new Size(113, 23);
@@ -140,36 +138,31 @@
             comboBoxFormat.Name = "comboBoxFormat";
             comboBoxFormat.Size = new Size(113, 23);
             comboBoxFormat.TabIndex = 10;
-            comboBoxFormat.SelectedIndexChanged += comboBoxFormat_SelectedIndexChanged;
-            // 
-            // chkMaintainAspectRatio
-            // 
-            chkMaintainAspectRatio.AutoSize = true;
-            chkMaintainAspectRatio.Checked = true;
-            chkMaintainAspectRatio.CheckState = CheckState.Checked;
-            chkMaintainAspectRatio.Location = new Point(315, 348);
-            chkMaintainAspectRatio.Name = "chkMaintainAspectRatio";
-            chkMaintainAspectRatio.Size = new Size(131, 19);
-            chkMaintainAspectRatio.TabIndex = 11;
-            chkMaintainAspectRatio.Text = "Zachowaj proporcje";
-            chkMaintainAspectRatio.TextAlign = ContentAlignment.BottomCenter;
-            chkMaintainAspectRatio.UseVisualStyleBackColor = true;
             // 
             // pictureBoxPreview
             // 
             pictureBoxPreview.Location = new Point(37, 37);
             pictureBoxPreview.Name = "pictureBoxPreview";
-            pictureBoxPreview.Size = new Size(720, 222);
-            pictureBoxPreview.TabIndex = 12;
+            pictureBoxPreview.Size = new Size(198, 198);
+            pictureBoxPreview.TabIndex = 11;
             pictureBoxPreview.TabStop = false;
+            // 
+            // listBoxFiles
+            // 
+            listBoxFiles.FormattingEnabled = true;
+            listBoxFiles.ItemHeight = 15;
+            listBoxFiles.Location = new Point(259, 37);
+            listBoxFiles.Name = "listBoxFiles";
+            listBoxFiles.Size = new Size(489, 199);
+            listBoxFiles.TabIndex = 12;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(listBoxFiles);
             Controls.Add(pictureBoxPreview);
-            Controls.Add(chkMaintainAspectRatio);
             Controls.Add(comboBoxFormat);
             Controls.Add(numericQuality);
             Controls.Add(numericHeight);
@@ -181,7 +174,7 @@
             Controls.Add(btnConvert);
             Controls.Add(btnInsert);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Image Converter";
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)numericWidth).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericHeight).EndInit();
@@ -190,6 +183,7 @@
             ResumeLayout(false);
             PerformLayout();
         }
+
 
         #endregion
 
@@ -205,5 +199,6 @@
         private ComboBox comboBoxFormat;
         private CheckBox chkMaintainAspectRatio;
         private PictureBox pictureBoxPreview;
+        private ListBox listBoxFiles;
     }
 }
