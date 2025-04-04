@@ -36,17 +36,63 @@ public partial class Form1 : Form
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
+                // Opcjonalnie: czyœcimy poprzednio dodane obrazy
                 imagePaths.Clear();
-                listBoxFiles.Items.Clear();
+                flowLayoutPanelImages.Controls.Clear();
 
                 foreach (string file in openFileDialog.FileNames)
                 {
-                    imagePaths.Add(file);
-                    listBoxFiles.Items.Add(Path.GetFileName(file));
+                    AddImageToPanel(file);
                 }
             }
         }
     }
+
+
+    private void AddImageToPanel(string filePath)
+    {
+        // Jeœli obraz ju¿ zosta³ dodany, pomiñ go.
+        if (imagePaths.Contains(filePath))
+            return;
+
+        imagePaths.Add(filePath);
+
+        // Tworzymy PictureBox dla miniaturki
+        PictureBox pb = new PictureBox();
+        try
+        {
+            // £adujemy obraz – warto stworzyæ kopiê, by nie blokowaæ pliku
+            using (var tempImg = Image.FromFile(filePath))
+            {
+                pb.Image = new Bitmap(tempImg);
+            }
+        }
+        catch
+        {
+            // W razie b³êdu (np. nieobs³ugiwany format) pomiñ ten plik
+            return;
+        }
+
+        pb.SizeMode = PictureBoxSizeMode.Zoom;
+        pb.Width = 100;
+        pb.Height = 100;
+        pb.Padding = new Padding(5);
+        pb.BorderStyle = BorderStyle.FixedSingle;
+        pb.Tag = filePath;
+
+        // Dodajemy obs³ugê klikniêcia – klikniêcie usuwa miniaturkê
+        pb.Click += (s, e) =>
+        {
+            PictureBox clickedPB = (PictureBox)s;
+            string path = clickedPB.Tag.ToString();
+            imagePaths.Remove(path);
+            flowLayoutPanelImages.Controls.Remove(clickedPB);
+            clickedPB.Dispose();
+        };
+
+        flowLayoutPanelImages.Controls.Add(pb);
+    }
+
 
     private Image ResizeImage(Image img, int width, int height)
     {
@@ -79,23 +125,6 @@ public partial class Form1 : Form
         int newWidth = (int)(original.Width * scale);
         int newHeight = (int)(original.Height * scale);
         return ResizeImage(original, newWidth, newHeight);
-    }
-
-
-    private ImageFormat GetImageFormatFromCombo(string formatName)
-    {
-        switch (formatName.ToUpper())
-        {
-            case "JPG":
-            case "JPEG":
-                return ImageFormat.Jpeg;
-            case "PNG":
-                return ImageFormat.Png;
-            case "BMP":
-                return ImageFormat.Bmp;
-            default:
-                return ImageFormat.Jpeg;
-        }
     }
 
     private void SaveWebPWithQuality(Image image, string path, long quality)
@@ -205,6 +234,23 @@ public partial class Form1 : Form
                 MessageBox.Show($"Konwersja zakoñczona.\nPomyœlnie przekonwertowano: {successCount} plików.\nNie uda³o siê przekonwertowaæ: {failCount} plików.",
                     "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+    }
+
+    private void flowLayoutPanelImages_DragEnter(object sender, DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            e.Effect = DragDropEffects.Copy;
+        else
+            e.Effect = DragDropEffects.None;
+    }
+
+    private void flowLayoutPanelImages_DragDrop(object sender, DragEventArgs e)
+    {
+        string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+        foreach (string file in files)
+        {
+            AddImageToPanel(file);
         }
     }
 

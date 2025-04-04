@@ -36,16 +36,14 @@
             numericWidth = new NumericUpDown();
             numericQuality = new NumericUpDown();
             comboBoxFormat = new ComboBox();
-            pictureBoxPreview = new PictureBox();
-            listBoxFiles = new ListBox();
+            flowLayoutPanelImages = new FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)numericWidth).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericQuality).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxPreview).BeginInit();
             SuspendLayout();
             // 
             // btnInsert
             // 
-            btnInsert.Location = new Point(266, 401);
+            btnInsert.Location = new Point(23, 346);
             btnInsert.Name = "btnInsert";
             btnInsert.Size = new Size(113, 37);
             btnInsert.TabIndex = 0;
@@ -55,7 +53,7 @@
             // 
             // btnConvert
             // 
-            btnConvert.Location = new Point(385, 401);
+            btnConvert.Location = new Point(23, 389);
             btnConvert.Name = "btnConvert";
             btnConvert.Size = new Size(113, 37);
             btnConvert.TabIndex = 1;
@@ -66,7 +64,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(143, 301);
+            label1.Location = new Point(23, 20);
             label1.Name = "label1";
             label1.Size = new Size(45, 15);
             label1.TabIndex = 2;
@@ -75,7 +73,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(259, 301);
+            label2.Location = new Point(23, 77);
             label2.Name = "label2";
             label2.Size = new Size(140, 15);
             label2.TabIndex = 3;
@@ -84,7 +82,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(655, 301);
+            label4.Location = new Point(23, 134);
             label4.Name = "label4";
             label4.Size = new Size(41, 15);
             label4.TabIndex = 5;
@@ -92,7 +90,7 @@
             // 
             // numericWidth
             // 
-            numericWidth.Location = new Point(266, 319);
+            numericWidth.Location = new Point(23, 95);
             numericWidth.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             numericWidth.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericWidth.Name = "numericWidth";
@@ -102,7 +100,7 @@
             // 
             // numericQuality
             // 
-            numericQuality.Location = new Point(599, 319);
+            numericQuality.Location = new Point(23, 152);
             numericQuality.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericQuality.Name = "numericQuality";
             numericQuality.Size = new Size(113, 23);
@@ -112,35 +110,30 @@
             // comboBoxFormat
             // 
             comboBoxFormat.FormattingEnabled = true;
-            comboBoxFormat.Location = new Point(109, 319);
+            comboBoxFormat.Location = new Point(23, 38);
             comboBoxFormat.Name = "comboBoxFormat";
             comboBoxFormat.Size = new Size(113, 23);
             comboBoxFormat.TabIndex = 10;
             // 
-            // pictureBoxPreview
+            // flowLayoutPanelImages
             // 
-            pictureBoxPreview.Location = new Point(37, 37);
-            pictureBoxPreview.Name = "pictureBoxPreview";
-            pictureBoxPreview.Size = new Size(198, 198);
-            pictureBoxPreview.TabIndex = 11;
-            pictureBoxPreview.TabStop = false;
-            // 
-            // listBoxFiles
-            // 
-            listBoxFiles.FormattingEnabled = true;
-            listBoxFiles.ItemHeight = 15;
-            listBoxFiles.Location = new Point(259, 37);
-            listBoxFiles.Name = "listBoxFiles";
-            listBoxFiles.Size = new Size(489, 199);
-            listBoxFiles.TabIndex = 12;
+            flowLayoutPanelImages.AllowDrop = true;
+            flowLayoutPanelImages.AutoScroll = true;
+            flowLayoutPanelImages.BackColor = SystemColors.Window;
+            flowLayoutPanelImages.BorderStyle = BorderStyle.FixedSingle;
+            flowLayoutPanelImages.Location = new Point(226, 20);
+            flowLayoutPanelImages.Name = "flowLayoutPanelImages";
+            flowLayoutPanelImages.Size = new Size(550, 406);
+            flowLayoutPanelImages.TabIndex = 13;
+            flowLayoutPanelImages.DragDrop += flowLayoutPanelImages_DragDrop;
+            flowLayoutPanelImages.DragEnter += flowLayoutPanelImages_DragEnter;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(listBoxFiles);
-            Controls.Add(pictureBoxPreview);
+            Controls.Add(flowLayoutPanelImages);
             Controls.Add(comboBoxFormat);
             Controls.Add(numericQuality);
             Controls.Add(numericWidth);
@@ -154,7 +147,6 @@
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)numericWidth).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericQuality).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxPreview).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -171,7 +163,6 @@
         private NumericUpDown numericQuality;
         private ComboBox comboBoxFormat;
         private CheckBox chkMaintainAspectRatio;
-        private PictureBox pictureBoxPreview;
-        private ListBox listBoxFiles;
+        private FlowLayoutPanel flowLayoutPanelImages;
     }
 }
