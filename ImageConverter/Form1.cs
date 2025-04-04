@@ -195,7 +195,8 @@ public partial class Form1 : Form
                             using (Image resizedImage = ResizeImageProportionally(original, maxDimension))
                             {
                                 string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
-                                string newFileName = $"{fileNameWithoutExt}_converted";
+                                //string newFileName = $"{fileNameWithoutExt}_converted";
+                                string newFileName = fileNameWithoutExt;
 
                                 switch (selectedFormat)
                                 {

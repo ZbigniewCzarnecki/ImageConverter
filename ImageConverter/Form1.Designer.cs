@@ -75,9 +75,9 @@
             label2.AutoSize = true;
             label2.Location = new Point(23, 77);
             label2.Name = "label2";
-            label2.Size = new Size(140, 15);
+            label2.Size = new Size(96, 15);
             label2.TabIndex = 3;
-            label2.Text = "Maksymalny Wymiar X/Y";
+            label2.Text = "Max Wymiar X/Y";
             // 
             // label4
             // 
