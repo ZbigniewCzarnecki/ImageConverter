@@ -24,7 +24,6 @@ public partial class Form1 : Form
 
         // Ustawiamy domyœlne wartoœci maksymalnych wymiarów i jakoœci
         numericWidth.Value = 1920;
-        numericHeight.Value = 1080;
         numericQuality.Value = 80;
     }
 
@@ -74,15 +73,14 @@ public partial class Form1 : Form
         return destImage;
     }
 
-    private Image ResizeImageProportionally(Image original, int maxWidth, int maxHeight)
+    private Image ResizeImageProportionally(Image original, int maxDimension)
     {
-        // Obliczamy skalê, aby obraz zmieœci³ siê w zadanych wymiarach
-        double scale = Math.Min((double)maxWidth / original.Width, (double)maxHeight / original.Height);
+        double scale = Math.Min((double)maxDimension / original.Width, (double)maxDimension / original.Height);
         int newWidth = (int)(original.Width * scale);
         int newHeight = (int)(original.Height * scale);
-
         return ResizeImage(original, newWidth, newHeight);
     }
+
 
     private ImageFormat GetImageFormatFromCombo(string formatName)
     {
@@ -145,9 +143,8 @@ public partial class Form1 : Form
             return;
         }
 
-        // Pobieramy maksymalne wymiary z istniej¹cych kontrolek
-        int maxWidth = (int)numericWidth.Value;
-        int maxHeight = (int)numericHeight.Value;
+        // U¿ywamy jednego pola jako limitu dla obu wymiarów
+        int maxDimension = (int)numericWidth.Value;
         long quality = (long)numericQuality.Value;
         string selectedFormat = comboBoxFormat.SelectedItem.ToString().ToUpper();
 
@@ -166,7 +163,7 @@ public partial class Form1 : Form
                     {
                         using (Image original = Image.FromFile(filePath))
                         {
-                            using (Image resizedImage = ResizeImageProportionally(original, maxWidth, maxHeight))
+                            using (Image resizedImage = ResizeImageProportionally(original, maxDimension))
                             {
                                 string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
                                 string newFileName = $"{fileNameWithoutExt}_converted";
@@ -210,4 +207,5 @@ public partial class Form1 : Form
             }
         }
     }
+
 }

@@ -32,16 +32,13 @@
             btnConvert = new Button();
             label1 = new Label();
             label2 = new Label();
-            label3 = new Label();
             label4 = new Label();
             numericWidth = new NumericUpDown();
-            numericHeight = new NumericUpDown();
             numericQuality = new NumericUpDown();
             comboBoxFormat = new ComboBox();
             pictureBoxPreview = new PictureBox();
             listBoxFiles = new ListBox();
             ((System.ComponentModel.ISupportInitialize)numericWidth).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericHeight).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericQuality).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxPreview).BeginInit();
             SuspendLayout();
@@ -80,18 +77,9 @@
             label2.AutoSize = true;
             label2.Location = new Point(259, 301);
             label2.Name = "label2";
-            label2.Size = new Size(129, 15);
+            label2.Size = new Size(140, 15);
             label2.TabIndex = 3;
-            label2.Text = "Maksymalna Szerokość";
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(415, 301);
-            label3.Name = "label3";
-            label3.Size = new Size(130, 15);
-            label3.TabIndex = 4;
-            label3.Text = "Maksymalna Wysokość";
+            label2.Text = "Maksymalny Wymiar X/Y";
             // 
             // label4
             // 
@@ -111,16 +99,6 @@
             numericWidth.Size = new Size(113, 23);
             numericWidth.TabIndex = 6;
             numericWidth.Value = new decimal(new int[] { 1920, 0, 0, 0 });
-            // 
-            // numericHeight
-            // 
-            numericHeight.Location = new Point(415, 319);
-            numericHeight.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
-            numericHeight.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numericHeight.Name = "numericHeight";
-            numericHeight.Size = new Size(113, 23);
-            numericHeight.TabIndex = 7;
-            numericHeight.Value = new decimal(new int[] { 1080, 0, 0, 0 });
             // 
             // numericQuality
             // 
@@ -165,10 +143,8 @@
             Controls.Add(pictureBoxPreview);
             Controls.Add(comboBoxFormat);
             Controls.Add(numericQuality);
-            Controls.Add(numericHeight);
             Controls.Add(numericWidth);
             Controls.Add(label4);
-            Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(btnConvert);
@@ -177,7 +153,6 @@
             Text = "Image Converter";
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)numericWidth).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericHeight).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericQuality).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxPreview).EndInit();
             ResumeLayout(false);
@@ -191,10 +166,8 @@
         private Button btnConvert;
         private Label label1;
         private Label label2;
-        private Label label3;
         private Label label4;
         private NumericUpDown numericWidth;
-        private NumericUpDown numericHeight;
         private NumericUpDown numericQuality;
         private ComboBox comboBoxFormat;
         private CheckBox chkMaintainAspectRatio;
