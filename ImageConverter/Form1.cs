@@ -1,3 +1,4 @@
+using ImageMagick;
 using System.Drawing.Imaging;
 
 namespace ImageConverter;
@@ -28,6 +29,7 @@ public partial class Form1 : Form
         // Dodajemy obs³ugiwane formaty do comboBoxFormat
         comboBoxFormat.Items.Add("JPG");
         comboBoxFormat.Items.Add("PNG");
+        comboBoxFormat.Items.Add("WEBP");
         comboBoxFormat.Items.Add("BMP");
         comboBoxFormat.SelectedIndex = 0; // domyœlnie JPG
 
@@ -148,6 +150,27 @@ public partial class Form1 : Form
         }
     }
 
+    private void SaveWebPWithQuality(Image image, string path, long quality)
+    {
+        // Konwertujemy System.Drawing.Image do MemoryStream.
+        using (var ms = new MemoryStream())
+        {
+            // Zapisujemy tymczasowo obraz w formacie PNG, aby nie traciæ przez stratn¹ konwersjê
+            image.Save(ms, ImageFormat.Png);
+            ms.Position = 0;
+
+            // £adujemy obraz do MagickImage
+            using (var magickImage = new MagickImage(ms))
+            {
+                // Ustawiamy jakoœæ kompresji WebP (w skali 0-100)
+                magickImage.Quality = (uint)quality;
+
+                // Zapisujemy obraz w formacie WebP
+                magickImage.Write(path, MagickFormat.WebP);
+            }
+        }
+    }
+
     private void SaveJpegWithQuality(Image image, string path, long quality)
     {
         // Szukamy kodeka JPG
@@ -178,32 +201,32 @@ public partial class Form1 : Form
 
     private void btnConvert_Click(object sender, EventArgs e)
     {
-        // SprawdŸ, czy mamy wczytany obraz
+        // SprawdŸ, czy zosta³ wczytany obraz
         if (originalImage == null)
         {
             MessageBox.Show("Najpierw wstaw obraz!", "B³¹d", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
-        // Pobierz parametry
+        // Pobierz parametry z kontrolek
         int newWidth = (int)numericWidth.Value;
         int newHeight = (int)numericHeight.Value;
         long quality = (long)numericQuality.Value;
         string selectedFormat = comboBoxFormat.SelectedItem.ToString();
 
-        // Skalujemy obraz
+        // Skalujemy obraz do nowych rozmiarów
         using (Image resizedImage = ResizeImage(originalImage, newWidth, newHeight))
         {
-            // Wyœwietlamy okno zapisu pliku
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
-                // Proponujemy nazwê
+                // Ustawiamy domyœln¹ nazwê pliku
                 saveFileDialog.FileName = "converted";
 
-                // Filtr w zale¿noœci od wybranego formatu
+                // Ustawiamy filtr dialogu w zale¿noœci od wybranego formatu
                 switch (selectedFormat.ToUpper())
                 {
                     case "JPG":
+                    case "JPEG":
                         saveFileDialog.Filter = "Obraz JPG|*.jpg";
                         break;
                     case "PNG":
@@ -212,23 +235,34 @@ public partial class Form1 : Form
                     case "BMP":
                         saveFileDialog.Filter = "Obraz BMP|*.bmp";
                         break;
+                    case "WEBP":
+                        saveFileDialog.Filter = "Obraz WebP|*.webp";
+                        break;
+                    default:
+                        saveFileDialog.Filter = "Obraz JPG|*.jpg";
+                        break;
                 }
 
-                // Jeœli u¿ytkownik wybra³ œcie¿kê
+                // Jeœli u¿ytkownik wybra³ miejsce zapisu
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    // Sprawdzamy, jaki format wybra³ w comboBox
-                    ImageFormat format = GetImageFormatFromCombo(selectedFormat);
-
-                    if (format == ImageFormat.Jpeg)
+                    // W zale¿noœci od formatu wykonujemy odpowiedni zapis
+                    switch (selectedFormat.ToUpper())
                     {
-                        // Zapis z uwzglêdnieniem jakoœci
-                        SaveJpegWithQuality(resizedImage, saveFileDialog.FileName, quality);
-                    }
-                    else
-                    {
-                        // PNG/BMP
-                        resizedImage.Save(saveFileDialog.FileName, format);
+                        case "JPG":
+                        case "JPEG":
+                            SaveJpegWithQuality(resizedImage, saveFileDialog.FileName, quality);
+                            break;
+                        case "PNG":
+                            resizedImage.Save(saveFileDialog.FileName, ImageFormat.Png);
+                            break;
+                        case "BMP":
+                            resizedImage.Save(saveFileDialog.FileName, ImageFormat.Bmp);
+                            break;
+                        case "WEBP":
+                            // Zapis do WebP z wykorzystaniem Magick.NET
+                            SaveWebPWithQuality(resizedImage, saveFileDialog.FileName, quality);
+                            break;
                     }
 
                     MessageBox.Show("Obraz zosta³ zapisany!", "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -236,5 +270,4 @@ public partial class Form1 : Form
             }
         }
     }
-
 }
