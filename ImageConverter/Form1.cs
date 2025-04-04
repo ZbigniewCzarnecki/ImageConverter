@@ -172,7 +172,6 @@ public partial class Form1 : Form
             return;
         }
 
-        // U¿ywamy jednego pola jako limitu dla obu wymiarów
         int maxDimension = (int)numericWidth.Value;
         long quality = (long)numericQuality.Value;
         string selectedFormat = comboBoxFormat.SelectedItem.ToString().ToUpper();
@@ -186,6 +185,11 @@ public partial class Form1 : Form
                 int successCount = 0;
                 int failCount = 0;
 
+                // Inicjalizacja ProgressBar
+                progressBarConversion.Minimum = 0;
+                progressBarConversion.Maximum = imagePaths.Count;
+                progressBarConversion.Value = 0;
+
                 foreach (string filePath in imagePaths)
                 {
                     try
@@ -195,8 +199,7 @@ public partial class Form1 : Form
                             using (Image resizedImage = ResizeImageProportionally(original, maxDimension))
                             {
                                 string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
-                                //string newFileName = $"{fileNameWithoutExt}_converted";
-                                string newFileName = fileNameWithoutExt;
+                                string newFileName = $"{fileNameWithoutExt}_converted";
 
                                 switch (selectedFormat)
                                 {
@@ -230,6 +233,10 @@ public partial class Form1 : Form
                     {
                         failCount++;
                     }
+                    // Aktualizujemy ProgressBar
+                    progressBarConversion.Value++;
+                    // Pozwala to na odœwie¿enie UI
+                    Application.DoEvents();
                 }
 
                 MessageBox.Show($"Konwersja zakoñczona.\nPomyœlnie przekonwertowano: {successCount} plików.\nNie uda³o siê przekonwertowaæ: {failCount} plików.",
@@ -237,6 +244,7 @@ public partial class Form1 : Form
             }
         }
     }
+
 
     private void flowLayoutPanelImages_DragEnter(object sender, DragEventArgs e)
     {
@@ -253,6 +261,15 @@ public partial class Form1 : Form
         {
             AddImageToPanel(file);
         }
+    }
+
+    private void btnClear_Click(object sender, EventArgs e)
+    {
+        // Wyczyœæ globaln¹ listê œcie¿ek
+        imagePaths.Clear();
+
+        // Usuñ wszystkie miniaturki z panelu, który wyœwietla obrazy (np. FlowLayoutPanel)
+        flowLayoutPanelImages.Controls.Clear();
     }
 
 }
