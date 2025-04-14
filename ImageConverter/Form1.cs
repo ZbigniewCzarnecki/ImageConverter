@@ -302,4 +302,9 @@ public partial class Form1 : Form
     {
         lblImageCount.Text = $"Liczba zdjêæ: {imagePaths.Count}";
     }
+
+    private void lblImageCount_Click(object sender, EventArgs e)
+    {
+
+    }
 }
