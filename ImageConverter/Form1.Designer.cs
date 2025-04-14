@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             btnInsert = new Button();
             btnConvert = new Button();
             label1 = new Label();
@@ -51,7 +52,7 @@
             // btnInsert
             // 
             btnInsert.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btnInsert.Location = new Point(12, 261);
+            btnInsert.Location = new Point(12, 266);
             btnInsert.Name = "btnInsert";
             btnInsert.Size = new Size(113, 37);
             btnInsert.TabIndex = 0;
@@ -62,7 +63,7 @@
             // btnConvert
             // 
             btnConvert.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnConvert.Location = new Point(484, 261);
+            btnConvert.Location = new Point(531, 266);
             btnConvert.Name = "btnConvert";
             btnConvert.Size = new Size(113, 37);
             btnConvert.TabIndex = 1;
@@ -133,14 +134,14 @@
             flowLayoutPanelImages.Controls.Add(label3);
             flowLayoutPanelImages.Location = new Point(189, 13);
             flowLayoutPanelImages.Name = "flowLayoutPanelImages";
-            flowLayoutPanelImages.Size = new Size(403, 233);
+            flowLayoutPanelImages.Size = new Size(446, 233);
             flowLayoutPanelImages.TabIndex = 13;
             flowLayoutPanelImages.DragDrop += flowLayoutPanelImages_DragDrop;
             flowLayoutPanelImages.DragEnter += flowLayoutPanelImages_DragEnter;
             // 
             // label3
             // 
-            label3.Anchor = AnchorStyles.Right;
+            label3.Anchor = AnchorStyles.None;
             label3.AutoSize = true;
             label3.Location = new Point(3, 0);
             label3.Name = "label3";
@@ -151,7 +152,7 @@
             // progressBarConversion
             // 
             progressBarConversion.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            progressBarConversion.Location = new Point(250, 261);
+            progressBarConversion.Location = new Point(297, 266);
             progressBarConversion.Name = "progressBarConversion";
             progressBarConversion.Size = new Size(228, 37);
             progressBarConversion.TabIndex = 14;
@@ -159,7 +160,7 @@
             // btnClear
             // 
             btnClear.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btnClear.Location = new Point(131, 261);
+            btnClear.Location = new Point(131, 266);
             btnClear.Name = "btnClear";
             btnClear.Size = new Size(113, 37);
             btnClear.TabIndex = 15;
@@ -193,19 +194,23 @@
             lblImageCount.TabIndex = 18;
             lblImageCount.Text = "Liczba zdjęć: 0";
             lblImageCount.TextAlign = ContentAlignment.MiddleRight;
-            lblImageCount.Click += lblImageCount_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(609, 310);
+            ClientSize = new Size(656, 315);
             Controls.Add(groupBox1);
             Controls.Add(btnClear);
             Controls.Add(progressBarConversion);
             Controls.Add(flowLayoutPanelImages);
             Controls.Add(btnConvert);
             Controls.Add(btnInsert);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MaximumSize = new Size(672, 354);
+            MinimizeBox = false;
+            MinimumSize = new Size(672, 354);
             Name = "Form1";
             Text = "Image Converter";
             Load += Form1_Load;
