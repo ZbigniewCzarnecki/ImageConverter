@@ -1,5 +1,6 @@
 using ImageMagick;
 using System.Drawing.Imaging;
+using ImageConverter.Thumbnail;
 
 namespace ImageConverter;
 
@@ -48,7 +49,6 @@ public partial class Form1 : Form
         }
     }
 
-
     private void AddImageToPanel(string filePath)
     {
         // Jeœli obraz ju¿ zosta³ dodany, pomiñ go.
@@ -61,15 +61,14 @@ public partial class Form1 : Form
         PictureBox pb = new PictureBox();
         try
         {
-            // £adujemy obraz – warto stworzyæ kopiê, by nie blokowaæ pliku
             using (var tempImg = Image.FromFile(filePath))
             {
-                pb.Image = new Bitmap(tempImg);
+                pb.Image = ThumbnailGenerator.CreateThumbnail(tempImg, 100);
             }
         }
         catch
         {
-            // W razie b³êdu (np. nieobs³ugiwany format) pomiñ ten plik
+            // W razie b³êdu pomiñ ten plik
             return;
         }
 
@@ -80,7 +79,7 @@ public partial class Form1 : Form
         pb.BorderStyle = BorderStyle.FixedSingle;
         pb.Tag = filePath;
 
-        // Dodajemy obs³ugê klikniêcia – klikniêcie usuwa miniaturkê
+        // Dodanie eventu usuwania miniaturki po klikniêciu
         pb.Click += (s, e) =>
         {
             PictureBox clickedPB = (PictureBox)s;
@@ -88,10 +87,13 @@ public partial class Form1 : Form
             imagePaths.Remove(path);
             flowLayoutPanelImages.Controls.Remove(clickedPB);
             clickedPB.Dispose();
+            UpdateImageCounter(); // Aktualizujemy licznik po usuniêciu miniaturki
         };
 
         flowLayoutPanelImages.Controls.Add(pb);
+        UpdateImageCounter(); // Aktualizujemy licznik po dodaniu miniaturki
     }
+
 
 
     private Image ResizeImage(Image img, int width, int height)
@@ -265,11 +267,29 @@ public partial class Form1 : Form
 
     private void btnClear_Click(object sender, EventArgs e)
     {
-        // Wyczyœæ globaln¹ listê œcie¿ek
+        // Iterujemy po kontrolkach w FlowLayoutPanel i zwalniamy zasoby
+        foreach (Control ctrl in flowLayoutPanelImages.Controls)
+        {
+            if (ctrl is PictureBox pb)
+            {
+                if (pb.Image != null)
+                {
+                    pb.Image.Dispose();
+                    pb.Image = null;
+                }
+                pb.Dispose();
+            }
+        }
+        flowLayoutPanelImages.Controls.Clear();
         imagePaths.Clear();
 
-        // Usuñ wszystkie miniaturki z panelu, który wyœwietla obrazy (np. FlowLayoutPanel)
-        flowLayoutPanelImages.Controls.Clear();
+        // Opcjonalnie zresetuj progressBarConversion lub inne kontrolki
+        progressBarConversion.Value = 0;
+        UpdateImageCounter();
     }
 
+    private void UpdateImageCounter()
+    {
+        lblImageCount.Text = $"Liczba zdjêæ: {imagePaths.Count}";
+    }
 }

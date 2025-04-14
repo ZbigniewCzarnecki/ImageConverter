@@ -41,6 +41,7 @@
             btnClear = new Button();
             groupBox1 = new GroupBox();
             label3 = new Label();
+            lblImageCount = new Label();
             ((System.ComponentModel.ISupportInitialize)numericWidth).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericQuality).BeginInit();
             groupBox1.SuspendLayout();
@@ -170,15 +171,26 @@
             label3.AutoSize = true;
             label3.Location = new Point(215, 20);
             label3.Name = "label3";
-            label3.Size = new Size(94, 15);
+            label3.Size = new Size(97, 15);
             label3.TabIndex = 17;
-            label3.Text = "Wybrane Obrazy";
+            label3.Text = "Wybrane Obrazy:";
+            // 
+            // lblImageCount
+            // 
+            lblImageCount.AutoSize = true;
+            lblImageCount.Location = new Point(315, 20);
+            lblImageCount.Name = "lblImageCount";
+            lblImageCount.Size = new Size(25, 15);
+            lblImageCount.TabIndex = 18;
+            lblImageCount.Text = "000";
+            lblImageCount.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(lblImageCount);
             Controls.Add(label3);
             Controls.Add(groupBox1);
             Controls.Add(btnClear);
@@ -214,5 +226,6 @@
         private Button btnClear;
         private GroupBox groupBox1;
         private Label label3;
+        private Label lblImageCount;
     }
 }
