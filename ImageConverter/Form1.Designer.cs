@@ -178,11 +178,11 @@
             // lblImageCount
             // 
             lblImageCount.AutoSize = true;
-            lblImageCount.Location = new Point(315, 20);
+            lblImageCount.Location = new Point(20, 241);
             lblImageCount.Name = "lblImageCount";
-            lblImageCount.Size = new Size(25, 15);
+            lblImageCount.Size = new Size(82, 15);
             lblImageCount.TabIndex = 18;
-            lblImageCount.Text = "000";
+            lblImageCount.Text = "Liczba zdjęć: 0";
             lblImageCount.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Form1

@@ -174,78 +174,88 @@ public partial class Form1 : Form
             return;
         }
 
+        // U¿ywamy jednego pola jako limitu dla obu wymiarów
         int maxDimension = (int)numericWidth.Value;
         long quality = (long)numericQuality.Value;
         string selectedFormat = comboBoxFormat.SelectedItem.ToString().ToUpper();
 
-        using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
+        // Wy³¹cz interakcjê w panelu miniatur, ¿eby u¿ytkownik nie móg³ klikaæ na zdjêcia podczas konwersji
+        flowLayoutPanelImages.Enabled = false;
+
+        try
         {
-            folderDialog.Description = "Wybierz folder, do którego maj¹ zostaæ zapisane przekonwertowane obrazy";
-            if (folderDialog.ShowDialog() == DialogResult.OK)
+            using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
             {
-                string outputFolder = folderDialog.SelectedPath;
-                int successCount = 0;
-                int failCount = 0;
-
-                // Inicjalizacja ProgressBar
-                progressBarConversion.Minimum = 0;
-                progressBarConversion.Maximum = imagePaths.Count;
-                progressBarConversion.Value = 0;
-
-                foreach (string filePath in imagePaths)
+                folderDialog.Description = "Wybierz folder, do którego maj¹ zostaæ zapisane przekonwertowane obrazy";
+                if (folderDialog.ShowDialog() == DialogResult.OK)
                 {
-                    try
-                    {
-                        using (Image original = Image.FromFile(filePath))
-                        {
-                            using (Image resizedImage = ResizeImageProportionally(original, maxDimension))
-                            {
-                                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
-                                string newFileName = $"{fileNameWithoutExt}_converted";
+                    string outputFolder = folderDialog.SelectedPath;
+                    int successCount = 0;
+                    int failCount = 0;
 
-                                switch (selectedFormat)
+                    progressBarConversion.Minimum = 0;
+                    progressBarConversion.Maximum = imagePaths.Count;
+                    progressBarConversion.Value = 0;
+
+                    foreach (string filePath in imagePaths)
+                    {
+                        try
+                        {
+                            using (Image original = Image.FromFile(filePath))
+                            {
+                                using (Image resizedImage = ResizeImageProportionally(original, maxDimension))
                                 {
-                                    case "JPG":
-                                    case "JPEG":
-                                        newFileName += ".jpg";
-                                        SaveJpegWithQuality(resizedImage, Path.Combine(outputFolder, newFileName), quality);
-                                        break;
-                                    case "PNG":
-                                        newFileName += ".png";
-                                        resizedImage.Save(Path.Combine(outputFolder, newFileName), ImageFormat.Png);
-                                        break;
-                                    case "BMP":
-                                        newFileName += ".bmp";
-                                        resizedImage.Save(Path.Combine(outputFolder, newFileName), ImageFormat.Bmp);
-                                        break;
-                                    case "WEBP":
-                                        newFileName += ".webp";
-                                        SaveWebPWithQuality(resizedImage, Path.Combine(outputFolder, newFileName), quality);
-                                        break;
-                                    default:
-                                        newFileName += ".jpg";
-                                        SaveJpegWithQuality(resizedImage, Path.Combine(outputFolder, newFileName), quality);
-                                        break;
+                                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
+                                    string newFileName = $"{fileNameWithoutExt}_converted";
+
+                                    switch (selectedFormat)
+                                    {
+                                        case "JPG":
+                                        case "JPEG":
+                                            newFileName += ".jpg";
+                                            SaveJpegWithQuality(resizedImage, Path.Combine(outputFolder, newFileName), quality);
+                                            break;
+                                        case "PNG":
+                                            newFileName += ".png";
+                                            resizedImage.Save(Path.Combine(outputFolder, newFileName), ImageFormat.Png);
+                                            break;
+                                        case "BMP":
+                                            newFileName += ".bmp";
+                                            resizedImage.Save(Path.Combine(outputFolder, newFileName), ImageFormat.Bmp);
+                                            break;
+                                        case "WEBP":
+                                            newFileName += ".webp";
+                                            SaveWebPWithQuality(resizedImage, Path.Combine(outputFolder, newFileName), quality);
+                                            break;
+                                        default:
+                                            newFileName += ".jpg";
+                                            SaveJpegWithQuality(resizedImage, Path.Combine(outputFolder, newFileName), quality);
+                                            break;
+                                    }
                                 }
                             }
+                            successCount++;
                         }
-                        successCount++;
+                        catch
+                        {
+                            failCount++;
+                        }
+                        progressBarConversion.Value++;
+                        Application.DoEvents();
                     }
-                    catch
-                    {
-                        failCount++;
-                    }
-                    // Aktualizujemy ProgressBar
-                    progressBarConversion.Value++;
-                    // Pozwala to na odœwie¿enie UI
-                    Application.DoEvents();
-                }
 
-                MessageBox.Show($"Konwersja zakoñczona.\nPomyœlnie przekonwertowano: {successCount} plików.\nNie uda³o siê przekonwertowaæ: {failCount} plików.",
-                    "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"Konwersja zakoñczona.\nPomyœlnie przekonwertowano: {successCount} plików.\nNie uda³o siê przekonwertowaæ: {failCount} plików.",
+                        "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
+        finally
+        {
+            // Przywracamy interakcjê po zakoñczeniu konwersji
+            flowLayoutPanelImages.Enabled = true;
+        }
     }
+
 
 
     private void flowLayoutPanelImages_DragEnter(object sender, DragEventArgs e)
