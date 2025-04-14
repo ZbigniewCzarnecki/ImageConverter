@@ -212,7 +212,8 @@
             MinimizeBox = false;
             MinimumSize = new Size(672, 354);
             Name = "Form1";
-            Text = "Image Converter";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "WPForge - Image Converter";
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)numericWidth).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericQuality).EndInit();
