@@ -120,4 +120,25 @@ public static class ImageConverterHelper
         }
         return null;
     }
+
+    public static List<int> GetCustomDimensions(Panel panel)
+    {
+        List<int> customDimensions = new List<int>();
+
+        // Iterujemy po wszystkich kontrolkach znajdujących się w podanym panelu
+        foreach (Control ctrl in panel.Controls)
+        {
+            // Sprawdzamy, czy kontrolka jest typu NumericUpDown
+            if (ctrl is NumericUpDown nud)
+            {
+                int value = (int)nud.Value;
+                // Jeśli wartość jest większa niż 0, dodajemy ją do listy
+                if (value > 0)
+                {
+                    customDimensions.Add(value);
+                }
+            }
+        }
+        return customDimensions;
+    }
 }

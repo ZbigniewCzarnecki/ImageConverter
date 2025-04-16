@@ -43,16 +43,31 @@
             btnClear = new Button();
             groupBox1 = new GroupBox();
             lblImageCount = new Label();
+            chkCustomDimensions = new CheckBox();
+            panelCustomDimensions = new Panel();
+            numericUpDown4 = new NumericUpDown();
+            numericUpDown5 = new NumericUpDown();
+            numericUpDown6 = new NumericUpDown();
+            numericUpDown3 = new NumericUpDown();
+            numericUpDown2 = new NumericUpDown();
+            numericUpDown1 = new NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)numericWidth).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericQuality).BeginInit();
             flowLayoutPanelImages.SuspendLayout();
             groupBox1.SuspendLayout();
+            panelCustomDimensions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown4).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown5).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown6).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             SuspendLayout();
             // 
             // btnInsert
             // 
             btnInsert.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btnInsert.Location = new Point(12, 266);
+            btnInsert.Location = new Point(12, 384);
             btnInsert.Name = "btnInsert";
             btnInsert.Size = new Size(113, 37);
             btnInsert.TabIndex = 0;
@@ -63,7 +78,7 @@
             // btnConvert
             // 
             btnConvert.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnConvert.Location = new Point(531, 266);
+            btnConvert.Location = new Point(689, 384);
             btnConvert.Name = "btnConvert";
             btnConvert.Size = new Size(113, 37);
             btnConvert.TabIndex = 1;
@@ -152,7 +167,7 @@
             // progressBarConversion
             // 
             progressBarConversion.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            progressBarConversion.Location = new Point(297, 266);
+            progressBarConversion.Location = new Point(455, 384);
             progressBarConversion.Name = "progressBarConversion";
             progressBarConversion.Size = new Size(228, 37);
             progressBarConversion.TabIndex = 14;
@@ -160,7 +175,7 @@
             // btnClear
             // 
             btnClear.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btnClear.Location = new Point(131, 266);
+            btnClear.Location = new Point(131, 384);
             btnClear.Name = "btnClear";
             btnClear.Size = new Size(113, 37);
             btnClear.TabIndex = 15;
@@ -195,11 +210,86 @@
             lblImageCount.Text = "Liczba zdjęć: 0";
             lblImageCount.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // chkCustomDimensions
+            // 
+            chkCustomDimensions.AutoSize = true;
+            chkCustomDimensions.Location = new Point(12, 261);
+            chkCustomDimensions.Name = "chkCustomDimensions";
+            chkCustomDimensions.Size = new Size(136, 19);
+            chkCustomDimensions.TabIndex = 17;
+            chkCustomDimensions.Text = "Dodatkowe Wymiary";
+            chkCustomDimensions.UseVisualStyleBackColor = true;
+            chkCustomDimensions.CheckedChanged += chkCustomDimensions_CheckedChanged;
+            // 
+            // panelCustomDimensions
+            // 
+            panelCustomDimensions.Controls.Add(numericUpDown4);
+            panelCustomDimensions.Controls.Add(numericUpDown5);
+            panelCustomDimensions.Controls.Add(numericUpDown6);
+            panelCustomDimensions.Controls.Add(numericUpDown3);
+            panelCustomDimensions.Controls.Add(numericUpDown2);
+            panelCustomDimensions.Controls.Add(numericUpDown1);
+            panelCustomDimensions.Location = new Point(12, 286);
+            panelCustomDimensions.Name = "panelCustomDimensions";
+            panelCustomDimensions.Size = new Size(265, 81);
+            panelCustomDimensions.TabIndex = 18;
+            panelCustomDimensions.Visible = false;
+            // 
+            // numericUpDown4
+            // 
+            numericUpDown4.Location = new Point(143, 58);
+            numericUpDown4.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            numericUpDown4.Name = "numericUpDown4";
+            numericUpDown4.Size = new Size(120, 23);
+            numericUpDown4.TabIndex = 5;
+            // 
+            // numericUpDown5
+            // 
+            numericUpDown5.Location = new Point(143, 29);
+            numericUpDown5.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            numericUpDown5.Name = "numericUpDown5";
+            numericUpDown5.Size = new Size(120, 23);
+            numericUpDown5.TabIndex = 4;
+            // 
+            // numericUpDown6
+            // 
+            numericUpDown6.Location = new Point(143, 0);
+            numericUpDown6.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            numericUpDown6.Name = "numericUpDown6";
+            numericUpDown6.Size = new Size(120, 23);
+            numericUpDown6.TabIndex = 3;
+            // 
+            // numericUpDown3
+            // 
+            numericUpDown3.Location = new Point(0, 58);
+            numericUpDown3.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            numericUpDown3.Name = "numericUpDown3";
+            numericUpDown3.Size = new Size(120, 23);
+            numericUpDown3.TabIndex = 2;
+            // 
+            // numericUpDown2
+            // 
+            numericUpDown2.Location = new Point(0, 29);
+            numericUpDown2.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            numericUpDown2.Name = "numericUpDown2";
+            numericUpDown2.Size = new Size(120, 23);
+            numericUpDown2.TabIndex = 1;
+            // 
+            // numericUpDown1
+            // 
+            numericUpDown1.Location = new Point(0, 0);
+            numericUpDown1.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            numericUpDown1.Name = "numericUpDown1";
+            numericUpDown1.Size = new Size(120, 23);
+            numericUpDown1.TabIndex = 0;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(656, 315);
+            ClientSize = new Size(814, 433);
+            Controls.Add(panelCustomDimensions);
+            Controls.Add(chkCustomDimensions);
             Controls.Add(groupBox1);
             Controls.Add(btnClear);
             Controls.Add(progressBarConversion);
@@ -208,7 +298,6 @@
             Controls.Add(btnInsert);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
-            MaximumSize = new Size(672, 354);
             MinimizeBox = false;
             MinimumSize = new Size(672, 354);
             Name = "Form1";
@@ -221,7 +310,15 @@
             flowLayoutPanelImages.PerformLayout();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            panelCustomDimensions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)numericUpDown4).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown5).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown6).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
 
@@ -242,5 +339,13 @@
         private GroupBox groupBox1;
         private Label label3;
         private Label lblImageCount;
+        private CheckBox chkCustomDimensions;
+        private Panel panelCustomDimensions;
+        private NumericUpDown numericUpDown4;
+        private NumericUpDown numericUpDown5;
+        private NumericUpDown numericUpDown6;
+        private NumericUpDown numericUpDown3;
+        private NumericUpDown numericUpDown2;
+        private NumericUpDown numericUpDown1;
     }
 }
