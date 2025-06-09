@@ -1,4 +1,3 @@
-using ImageMagick;
 using System.Drawing.Imaging;
 using ImageConverter.Thumbnail;
 
@@ -283,5 +282,15 @@ public partial class Form1 : Form
     {
         // Jeœli checkbox jest zaznaczony, poka¿ dodatkowe pola, w przeciwnym wypadku je ukryj
         panelCustomDimensions.Visible = chkCustomDimensions.Checked;
+        if (!chkCustomDimensions.Checked) { 
+            flowLayoutPanelImages.Size = new System.Drawing.Size(450, 200);
+            groupBox2.Size = new System.Drawing.Size(490, 250);
+        }
+        else
+        {
+            flowLayoutPanelImages.Size = new System.Drawing.Size(450, 160);
+            groupBox2.Size = new System.Drawing.Size(490, 210);
+        }
+
     }
 }
