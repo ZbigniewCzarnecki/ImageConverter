@@ -4,13 +4,6 @@ namespace ImageConverter.Thumbnail;
 
 static class ThumbnailGenerator
 {
-    /// <summary>
-    /// Tworzy miniaturkę obrazu, skalując oryginal proporcjonalnie tak, aby 
-    /// żadna z jego stron nie przekroczyła wartości maxDimension.
-    /// </summary>
-    /// <param name="original">Oryginalny obraz.</param>
-    /// <param name="maxDimension">Maksymalny rozmiar (szerokość lub wysokość) miniaturki.</param>
-    /// <returns>Obraz miniaturki.</returns>
     public static Image CreateThumbnail(Image original, int maxDimension)
     {
         double scale = Math.Min((double)maxDimension / original.Width, (double)maxDimension / original.Height);
@@ -21,13 +14,6 @@ static class ThumbnailGenerator
         return ResizeImage(original, thumbWidth, thumbHeight);
     }
 
-    /// <summary>
-    /// Przeskalowuje obraz do podanej szerokości i wysokości przy użyciu wysokiej jakości interpolacji.
-    /// </summary>
-    /// <param name="img">Oryginalny obraz.</param>
-    /// <param name="width">Nowa szerokość.</param>
-    /// <param name="height">Nowa wysokość.</param>
-    /// <returns>Nowy obraz o zadanych wymiarach.</returns>
     private static Image ResizeImage(Image img, int width, int height)
     {
         var destRect = new Rectangle(0, 0, width, height);

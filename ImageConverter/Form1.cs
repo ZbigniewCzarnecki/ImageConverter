@@ -7,6 +7,7 @@ public partial class Form1 : Form
 {
     // Lista przechowuj¹ca œcie¿ki wybranych obrazów.
     private List<string> imagePaths = new List<string>();
+    private bool _customImageName = false;
 
     public Form1()
     {
@@ -102,7 +103,7 @@ public partial class Form1 : Form
             return;
         }
 
-        int mainDimension = (int)numericWidth.Value; // G³ówny wymiar
+        int mainDimension = (int)numericWidth.Value;
         long quality = (long)numericQuality.Value;
         string selectedFormat = comboBoxFormat.SelectedItem.ToString().ToUpper();
 
@@ -113,9 +114,15 @@ public partial class Form1 : Form
             customDimensions = ImageConverterHelper.GetCustomDimensions(panelCustomDimensions);
         }
 
-        // Ustal ca³kowit¹ liczbê operacji. Gdy customDimensions jest pusta – tylko g³ówna konwersja,
-        // w przeciwnym razie g³ówna konwersja + dodatkowe operacje dla ka¿dego obrazu.
-        int totalOperations = imagePaths.Count * (customDimensions.Count > 0 ? (1 + customDimensions.Count) : 1);
+        // Tworzymy listê wszystkich wymiarów do przetworzenia
+        List<int> allDimensions = new List<int> { mainDimension };
+        if (customDimensions.Count > 0)
+        {
+            allDimensions.AddRange(customDimensions);
+        }
+
+        // Ustal ca³kowit¹ liczbê operacji
+        int totalOperations = imagePaths.Count * allDimensions.Count;
         progressBarConversion.Minimum = 0;
         progressBarConversion.Maximum = totalOperations;
         progressBarConversion.Value = 0;
@@ -135,86 +142,24 @@ public partial class Form1 : Form
                     {
                         using (Image original = Image.FromFile(filePath))
                         {
-                            // G³ówna konwersja
-                            using (Image resizedMain = ImageConverterHelper.ResizeImageProportionally(original, mainDimension))
+                            string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
+
+                            // Przetwarzamy wszystkie wymiary w jednej pêtli
+                            for (int i = 0; i < allDimensions.Count; i++)
                             {
-                                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
-                                string newFileNameMain = $"{fileNameWithoutExt}";
+                                int dimension = allDimensions[i];
 
-                                switch (selectedFormat)
+                                using (Image resized = ImageConverterHelper.ResizeImageProportionally(original, dimension))
                                 {
-                                    case "JPG":
-                                    case "JPEG":
-                                        newFileNameMain += ".jpg";
-                                        ImageConverterHelper.SaveJpegWithQuality(resizedMain, Path.Combine(outputFolder, newFileNameMain), quality);
-                                        break;
-                                    case "PNG":
-                                        newFileNameMain += ".png";
-                                        resizedMain.Save(Path.Combine(outputFolder, newFileNameMain), ImageFormat.Png);
-                                        break;
-                                    case "BMP":
-                                        newFileNameMain += ".bmp";
-                                        resizedMain.Save(Path.Combine(outputFolder, newFileNameMain), ImageFormat.Bmp);
-                                        break;
-                                    case "WEBP":
-                                        newFileNameMain += ".webp";
-                                        ImageConverterHelper.SaveWebPWithQuality(resizedMain, Path.Combine(outputFolder, newFileNameMain), quality);
-                                        break;
-                                    case "ICO":
-                                        newFileNameMain += ".ico";
-                                        ImageConverterHelper.SaveIcoWithIconConversion(resizedMain, Path.Combine(outputFolder, newFileNameMain), mainDimension);
-                                        break;
-                                    default:
-                                        newFileNameMain += ".jpg";
-                                        ImageConverterHelper.SaveJpegWithQuality(resizedMain, Path.Combine(outputFolder, newFileNameMain), quality);
-                                        break;
-                                }
-                            }
-                            progressBarConversion.Value++;
-                            Application.DoEvents();
+                                    // Nazwa pliku - g³ówny wymiar bez sufiksu, custom wymiary z sufiksem
+                                    string newFileName = i == 0 ? fileNameWithoutExt : $"{fileNameWithoutExt}_{dimension}px";
 
-                            // Dodatkowa konwersja, je¿eli customDimensions zawiera jakieœ wartoœci
-                            if (customDimensions.Count > 0)
-                            {
-                                foreach (int customDim in customDimensions)
-                                {
-                                    using (Image resizedCustom = ImageConverterHelper.ResizeImageProportionally(original, customDim))
-                                    {
-                                        string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
-                                        string newFileNameCustom = $"{fileNameWithoutExt}_{customDim}px";
-
-                                        switch (selectedFormat)
-                                        {
-                                            case "JPG":
-                                            case "JPEG":
-                                                newFileNameCustom += ".jpg";
-                                                ImageConverterHelper.SaveJpegWithQuality(resizedCustom, Path.Combine(outputFolder, newFileNameCustom), quality);
-                                                break;
-                                            case "PNG":
-                                                newFileNameCustom += ".png";
-                                                resizedCustom.Save(Path.Combine(outputFolder, newFileNameCustom), ImageFormat.Png);
-                                                break;
-                                            case "BMP":
-                                                newFileNameCustom += ".bmp";
-                                                resizedCustom.Save(Path.Combine(outputFolder, newFileNameCustom), ImageFormat.Bmp);
-                                                break;
-                                            case "WEBP":
-                                                newFileNameCustom += ".webp";
-                                                ImageConverterHelper.SaveWebPWithQuality(resizedCustom, Path.Combine(outputFolder, newFileNameCustom), quality);
-                                                break;
-                                            case "ICO":
-                                                newFileNameCustom += ".ico";
-                                                ImageConverterHelper.SaveIcoWithIconConversion(resizedCustom, Path.Combine(outputFolder, newFileNameCustom), customDim);
-                                                break;
-                                            default:
-                                                newFileNameCustom += ".jpg";
-                                                ImageConverterHelper.SaveJpegWithQuality(resizedCustom, Path.Combine(outputFolder, newFileNameCustom), quality);
-                                                break;
-                                        }
-                                    }
-                                    progressBarConversion.Value++;
-                                    Application.DoEvents();
+                                    // Jedna funkcja do zapisywania w odpowiednim formacie
+                                    SaveImageInFormat(resized, outputFolder, newFileName, selectedFormat, quality, dimension);
                                 }
+
+                                progressBarConversion.Value++;
+                                Application.DoEvents();
                             }
                         }
                         successCount++;
@@ -227,11 +172,45 @@ public partial class Form1 : Form
 
                 MessageBox.Show($"Konwersja zakoñczona.\nPomyœlnie przekonwertowano: {successCount} obrazów.\nNie uda³o siê wykonaæ: {failCount} operacji.",
                     "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                progressBarConversion.Value = 0;
             }
         }
     }
 
+    private void SaveImageInFormat(Image image, string outputFolder, string fileNameWithoutExt, string format, long quality, int dimension)
+    {
+        string fullPath;
 
+        switch (format)
+        {
+            case "JPG":
+            case "JPEG":
+                fullPath = Path.Combine(outputFolder, fileNameWithoutExt + ".jpg");
+                ImageConverterHelper.SaveJpegWithQuality(image, fullPath, quality);
+                break;
+            case "PNG":
+                fullPath = Path.Combine(outputFolder, fileNameWithoutExt + ".png");
+                image.Save(fullPath, ImageFormat.Png);
+                break;
+            case "BMP":
+                fullPath = Path.Combine(outputFolder, fileNameWithoutExt + ".bmp");
+                image.Save(fullPath, ImageFormat.Bmp);
+                break;
+            case "WEBP":
+                fullPath = Path.Combine(outputFolder, fileNameWithoutExt + ".webp");
+                ImageConverterHelper.SaveWebPWithQuality(image, fullPath, quality);
+                break;
+            case "ICO":
+                fullPath = Path.Combine(outputFolder, fileNameWithoutExt + ".ico");
+                ImageConverterHelper.SaveIcoWithIconConversion(image, fullPath, dimension);
+                break;
+            default:
+                fullPath = Path.Combine(outputFolder, fileNameWithoutExt + ".jpg");
+                ImageConverterHelper.SaveJpegWithQuality(image, fullPath, quality);
+                break;
+        }
+    }
 
     private void flowLayoutPanelImages_DragEnter(object sender, DragEventArgs e)
     {
@@ -282,7 +261,8 @@ public partial class Form1 : Form
     {
         // Jeœli checkbox jest zaznaczony, poka¿ dodatkowe pola, w przeciwnym wypadku je ukryj
         panelCustomDimensions.Visible = chkCustomDimensions.Checked;
-        if (!chkCustomDimensions.Checked) { 
+        if (!chkCustomDimensions.Checked)
+        {
             flowLayoutPanelImages.Size = new System.Drawing.Size(450, 200);
             groupBox2.Size = new System.Drawing.Size(490, 250);
         }

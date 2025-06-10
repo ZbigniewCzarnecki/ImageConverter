@@ -219,9 +219,9 @@
             chkCustomDimensions.ImageAlign = ContentAlignment.MiddleLeft;
             chkCustomDimensions.Location = new Point(19, 189);
             chkCustomDimensions.Name = "chkCustomDimensions";
-            chkCustomDimensions.Size = new Size(88, 26);
+            chkCustomDimensions.Size = new Size(60, 26);
             chkCustomDimensions.TabIndex = 17;
-            chkCustomDimensions.Text = "Wymiary";
+            chkCustomDimensions.Text = "Sizes";
             chkCustomDimensions.TextAlign = ContentAlignment.BottomLeft;
             chkCustomDimensions.UseVisualStyleBackColor = true;
             chkCustomDimensions.CheckedChanged += chkCustomDimensions_CheckedChanged;
@@ -281,7 +281,7 @@
             numericUpDown3.TabIndex = 2;
             numericUpDown3.TextAlign = HorizontalAlignment.Right;
             numericUpDown3.UpDownAlign = LeftRightAlignment.Left;
-            numericUpDown3.Value = 736;
+            numericUpDown3.Value = new decimal(new int[] { 736, 0, 0, 0 });
             // 
             // numericUpDown2
             // 
@@ -298,7 +298,7 @@
             numericUpDown2.TabIndex = 1;
             numericUpDown2.TextAlign = HorizontalAlignment.Right;
             numericUpDown2.UpDownAlign = LeftRightAlignment.Left;
-            numericUpDown2.Value = 1024;
+            numericUpDown2.Value = new decimal(new int[] { 1024, 0, 0, 0 });
             // 
             // numericUpDown1
             // 
@@ -315,7 +315,7 @@
             numericUpDown1.TabIndex = 0;
             numericUpDown1.TextAlign = HorizontalAlignment.Right;
             numericUpDown1.UpDownAlign = LeftRightAlignment.Left;
-            numericUpDown1.Value = 1536;
+            numericUpDown1.Value = new decimal(new int[] { 1536, 0, 0, 0 });
             // 
             // groupBox2
             // 
