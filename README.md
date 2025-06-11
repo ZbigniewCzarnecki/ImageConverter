@@ -1,8 +1,5 @@
 # Image Converter
 
-Po pobraniu projektu w ImageConverter\ImageConverterSetup\Release 
-znajduje się plik instalacyjny "ImageConverterSetup.msi"
-
 Prosty konwerter obrazów w Windows Forms (C#) pozwala na:
 - zmianę formatu (JPG, PNG, BMP, WEBP)
 - skalowanie proporcjonalne do zadanego wymiaru
@@ -33,7 +30,9 @@ Prosty konwerter obrazów w Windows Forms (C#) pozwala na:
 4. **`Wynik programu`**  
 ![Zbudowany plik.exe](./Screenshots/wynik.png)  
 
-5. **`Z Lewej png 2,26MB z prawej webp 54,9KB`**  
+5. **`PNG 2,26MB`**  
 
-| ![Obrazek 1](./Screenshots/tło.png)  | ![Obrazek 2](./Screenshots/tło.webp)  |
-| :---: | :---: |
+![PNG](./Screenshots/tło.png)
+
+5. **`WEBP 54,9KB`**  
+![WEBP](./Screenshots/tło.webp)
