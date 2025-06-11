@@ -219,9 +219,9 @@
             chkCustomDimensions.ImageAlign = ContentAlignment.MiddleLeft;
             chkCustomDimensions.Location = new Point(19, 189);
             chkCustomDimensions.Name = "chkCustomDimensions";
-            chkCustomDimensions.Size = new Size(60, 26);
+            chkCustomDimensions.Size = new Size(88, 26);
             chkCustomDimensions.TabIndex = 17;
-            chkCustomDimensions.Text = "Sizes";
+            chkCustomDimensions.Text = "Wymiary";
             chkCustomDimensions.TextAlign = ContentAlignment.BottomLeft;
             chkCustomDimensions.UseVisualStyleBackColor = true;
             chkCustomDimensions.CheckedChanged += chkCustomDimensions_CheckedChanged;
