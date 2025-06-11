@@ -21,18 +21,17 @@ Prosty konwerter obrazów w Windows Forms (C#) pozwala na:
 ![Zbudowany plik.exe](./Screenshots/plik.png)  
 
 2. **`Wygląd programu`**  
-![Zbudowany plik.exe](./Screenshots/program.png)  
+![Wygląd Programu](./Screenshots/program.png)  
 
 3. **`Działanie programu`**  
-![Zbudowany plik.exe](./Screenshots/działanie.png)  
-![Zbudowany plik.exe](./Screenshots/koniec.png)  
+![Działanie](./Screenshots/działanie.png)  
+![Koniec](./Screenshots/koniec.png)  
 
 4. **`Wynik programu`**  
-![Zbudowany plik.exe](./Screenshots/wynik.png)  
+![Wynik](./Screenshots/wynik.png)  
 
-5. **`PNG 2,26MB`**  
+5. **`PNG 2,26MB`**
+![PNG](./Screenshots/Tło.png)
 
-![PNG](./Screenshots/tło.png)
-
-5. **`WEBP 54,9KB`**  
-![WEBP](./Screenshots/tło.webp)
+6. **`WEBP 54,9KB`** 
+![WEBP](./Screenshots/Tło.webp)
